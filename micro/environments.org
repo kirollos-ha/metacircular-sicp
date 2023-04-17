@@ -1,0 +1,2 @@
+un ambiente è una lista di frame
+un frame è una alist, o una hash map, qualsiasi modo di tradurre una mappa tra simboli e valori ti venga in ment

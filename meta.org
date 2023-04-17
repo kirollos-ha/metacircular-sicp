@@ -1,0 +1,52 @@
+* Eval
+al centro di tutta sta roba ci starà una procedura di eval
+questa procedura dovrà
+ - capire che tipo di form stiamo valutando
+ - fare il dispatch al caso/funzione specifica per quel tipo di form
+
+** Tipi di form
+i tipi di form che ci interessano sono, al momento
+ - per "valori"
+   - self-evaluating :: letterali il cui valore è il letterale stesso
+   - variabili :: di cui cercare il valore
+   - lambda :: che bisogna crearci poi una funzione
+ - per "funzioni" o comunque alberi non ovvii
+   - funzioni built-in :: (+, -, *, etc)
+   - funzioni user-defined :: 
+   - special form :: quali
+	 - cond
+	 - define
+ - per quanto riguarda la manipolazione dell'environment di valori/variabili
+   - definizioni
+   - assegnamenti
+
+*** Piccolo spoiler 
+le funzioni si creano definendo una lambda, cioè invece di fare qualcosa come
+ - $x = 10$
+fai
+ - $quadrato = \lambda y:y*y$
+quindi se poi fai
+ - $quadrato\ 4$
+ti viene
+ - $(\lambda y : y * y) 4 \to 4 * 4 \to 16$
+
+quindi definire funzioni e definire variabili qui sono la stessa cosa $\pm$
+
+*** Chiarimenti su lambda
+le lambda si definiscono a parte come caso tra le definizioni visto che queste tengono
+traccia dello stato dell'ambiente al momento della loro definizione
+
+questo ai fini di avere uno scope lessicale nel linguaggio
+
+* Apply
+=apply= si divide in due casi
+ - funzione builtin :: valuta una funzione definita nell'intepreter
+ - funzione non builtin :: valuta una funzione definita dall'utente
+
+questi due casi si differenziano più perchè il caso =builtin= va a cercare la funzione tra
+definizioni interne dell'intepreter, mentre il caso =non builtin= va a cercare la funzione
+nell'ambiente di definizioni in cui l'utente avrà definito la funzione in questione
+
+* API Reference
+qui si può trovare una sottospecie di lista di "ma questo che cazzo fa?", stilata ai fini
+di rendere più facile la comprensione e fruizione del testo

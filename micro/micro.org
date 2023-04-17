@@ -1,0 +1,77 @@
+* Coso
+codesto coso è mirato ad essere tipo l'evaluator di sicp
+ma più facile da far partire
+(sicp ti amo ma un'intero capitolo di crollare astrazioni per poterlo runnare è troppo)
+
+** Eval
+l'eval si scompone in sti casi
+ - proc base, al momento espansa inline in
+   - +
+   - print
+ - cond
+ - lambda
+ - define
+ - apply
+
+** Apply
+apply prende
+ - una procedura
+ - argomenti
+
+*** Procedure e lambda
+e applica la procedura agli argomenti
+la procedura è fatta da
+ - una lambda
+ - un ambiente
+
+la procedura viene creata/ritornata dalla valutazione di una form =lambda=
+
+** Cond
+evcond
+
+* API REFERENCE
+
+** Ambienti
+
+un ambiente è una sequenza ordinata di =frame=, un =frame= rappresenta una funzione tra simboli e valori associati a questi
+
+la "lista" di frame è esplorabile tramite le operazioni
+ - =env-first-frame=
+ - =env-rest-frames=
+
+che sono bene o male =car= e =cdr=,
+ai fini di creare/aumentare/modificare ambienti sono esposte anche le funzioni
+che effettuano creazione/modifica non distruttiva di ambienti
+ - =env-make-empty=
+ - =env-add-frame=
+
+ai fini di ispezione e/o caso base nelle ricorsioni (parecchio upfront come astrazione) è data la funzione
+ - =env-no-frames?=
+
+che prende come input un ambiente e informa su qualora questo contenga o meno dei frame
+
+per la modifica distruttiva di ambienti ecce
+ - =set-first-frame!=
+
+che si comporta da il =set-car!= per il =car!= che sarebbe =env-first-frame=
+(non si ritienene necessario per ora implementare un =set-rest-frames!=)
+   
+la seguente funzione prende un ambiente e una variabile, rendendo il valore assunto da questa all'interno dell'ambiente in questione (o pesanti lamentele qualora questo valore non esistesse)
+ - =lookup-value=
+
+=lookup-value= è implementata in termini di =env-binding-for-var=, si veda poi nella sezione =frame= rivedere l'utilizzo dei binding e valori
+
+   
+visto che tutto questo (anche) a poter implementare =set!= e =define= sono date le seguenti funzioni (distruttive) per
+ - =set-variable-value!= :: cambiare il valore della variabile, sengalando errore qualore la variabile non esistesse
+ - =define-variable-value!= :: cambiare il valore della variabile, aggiungendola al frame in cima qualora questa non esistesse
+
+*** Frame
+il =frame= è un componente fondamentale nel concetto/implementazione di un ambiente lessicale
+un frame può essere visto(o implementato) come una alist, in generale questo deve solo comportarsi da mappa $simbolo -> valore$
+
+il frame offre le seguenti funzioni
+
+ - =(frame-make <var list> <values list>)= c'hai presente pairlis? quello
+ - =(frame-binding-for-var <var> <frame>)= se la variabile ha un binding nel frame rende il binding in questione, altrimenti rende =no-binding=
+ - =(frame-add-binding <frame> <new var> <new val>)= crea un frame con gli stessi binding di =<frame>=, ma con un binding extra tra =<new var>= e =<new val>=
